@@ -60,27 +60,29 @@ class BerlinBot:
     @staticmethod
     def enter_form(driver: webdriver.Chrome):
         logging.info("Fill out form")
-        # select china
+        # select Ägypten
         s = Select(driver.find_element(By.ID, 'xi-sel-400'))
-        s.select_by_visible_text("China")
+        s.select_by_visible_text("Ägypten")
+        time.sleep(1)
         # eine person
         s = Select(driver.find_element(By.ID, 'xi-sel-422'))
         s.select_by_visible_text("eine Person")
+        time.sleep(1)
         # no family
         s = Select(driver.find_element(By.ID, 'xi-sel-427' ))
         s.select_by_visible_text("nein")
-        time.sleep(5)
+        time.sleep(1)
 
         # extend stay
         driver.find_element(By.XPATH, '//*[@id="xi-div-30"]/div[2]/label/p').click()
         time.sleep(2)
 
         # click on study group
-        driver.find_element(By.XPATH, '//*[@id="inner-479-0-2"]/div/div[1]/label/p').click()
+        driver.find_element(By.XPATH, '//*[@id="inner-287-0-2"]/div/div[1]/label/p').click()
         time.sleep(2)
 
         # b/c of stufy
-        driver.find_element(By.XPATH, '//*[@id="inner-479-0-2"]/div/div[2]/div/div[5]/label').click()
+        driver.find_element(By.XPATH, '//*[@id="inner-287-0-2"]/div/div[2]/div/div[5]/label').click()
         time.sleep(4)
 
         # submit form
@@ -91,7 +93,7 @@ class BerlinBot:
         logging.info("!!!SUCCESS - do not close the window!!!!")
         while True:
             self._play_sound_osx(self._sound_file)
-            time.sleep(15)
+            time.sleep(5)
         
         # todo play something and block the browser
 
@@ -121,34 +123,12 @@ class BerlinBot:
     # stolen from https://github.com/JaDogg/pydoro/blob/develop/pydoro/pydoro_core/sound.py
     @staticmethod
     def _play_sound_osx(sound, block=True):
-        """
-        Utilizes AppKit.NSSound. Tested and known to work with MP3 and WAVE on
-        OS X 10.11 with Python 2.7. Probably works with anything QuickTime supports.
-        Probably works on OS X 10.5 and newer. Probably works with all versions of
-        Python.
-        Inspired by (but not copied from) Aaron's Stack Overflow answer here:
-        http://stackoverflow.com/a/34568298/901641
-        I never would have tried using AppKit.NSSound without seeing his code.
-        """
-        from AppKit import NSSound
-        from Foundation import NSURL
-        from time import sleep
-
+           
+        import os
+        duration = 1  # seconds
+        freq = 1000  # Hz
+        os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
         logging.info("Play sound")
-        if "://" not in sound:
-            if not sound.startswith("/"):
-                from os import getcwd
-
-                sound = getcwd() + "/" + sound
-            sound = "file://" + sound
-        url = NSURL.URLWithString_(sound)
-        nssound = NSSound.alloc().initWithContentsOfURL_byReference_(url, True)
-        if not nssound:
-            raise IOError("Unable to load sound named: " + sound)
-        nssound.play()
-
-        if block:
-            sleep(nssound.duration())
 
 if __name__ == "__main__":
     BerlinBot().run_loop()
